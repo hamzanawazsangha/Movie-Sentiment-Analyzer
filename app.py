@@ -8,6 +8,10 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from huggingface_hub import hf_hub_download
+import os
+
+# Set TensorFlow logging to only show errors
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # Download NLTK data
 nltk.download('stopwords')
@@ -119,9 +123,6 @@ def load_resources():
         st.error(f"Error loading model files from Hugging Face: {str(e)}")
         st.stop()
 
-# Load resources
-tokenizer, model, max_len = load_resources()
-
 # Main app
 def main():
     st.markdown("<div class='header'><h1 style='text-align: center;'>🎬 Movie Review Sentiment Analyzer</h1></div>", unsafe_allow_html=True)
@@ -147,6 +148,9 @@ def main():
         else:
             with st.spinner("Analyzing sentiment..."):
                 try:
+                    # Load resources when needed
+                    tokenizer, model, max_len = load_resources()
+                    
                     # Clean and preprocess the text
                     cleaned_text = clean_text(review_text)
                     
