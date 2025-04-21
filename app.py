@@ -98,10 +98,11 @@ def download_nltk_data():
 def load_resources():
     try:
         # Download tokenizer
-        tokenizer_path = hf_hub_download(
-            repo_id="HamzaNawaz17/MovieSentimentAnalyzer",
-            filename="tokenizer.pickle"
-        )
+        # tokenizer_path = hf_hub_download(
+        #     repo_id="HamzaNawaz17/MovieSentimentAnalyzer",
+        #     filename="tokenizer.pickle"
+        # )
+        tokenizer_path ="tokenizer.pickle"
         with open(tokenizer_path, 'rb') as handle:
             tokenizer = pickle.load(handle)
         
