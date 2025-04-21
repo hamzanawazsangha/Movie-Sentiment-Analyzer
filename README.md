@@ -125,4 +125,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Hamza Nawaz - [@hamzanawazsangha](https://github.com/hamzanawazsangha)
 
-Project Link: [https://github.com/HamzaNawaz17/movie-sentiment-analyzer](https://github.com/HamzaNawaz17/movie-sentiment-analyzer)
+Project Link: [https://github.com/hamzanawazsangha/movie-sentiment-analyzer](https://github.com/hamzanawazsangha/Movie-Sentiment-Analyzer)
