@@ -7,6 +7,7 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from huggingface_hub import hf_hub_download
 
 # Download NLTK data
 nltk.download('stopwords')
@@ -80,20 +81,33 @@ def clean_text(text):
     words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
     return ' '.join(words)
 
-# Load resources with error handling
+# Load resources from Hugging Face Hub
+@st.cache_resource
 def load_resources():
     try:
-        # Load tokenizer
-        with open('tokenizer.pickle', 'rb') as handle:
+        # Download tokenizer
+        tokenizer_path = hf_hub_download(
+            repo_id="HamzaNawaz17/MovieSentimentAnalyzer",
+            filename="tokenizer.pickle"
+        )
+        with open(tokenizer_path, 'rb') as handle:
             tokenizer = pickle.load(handle)
         
-        # Load model
-        model = tf.keras.models.load_model('final_lstm_model.keras')
+        # Download model
+        model_path = hf_hub_download(
+            repo_id="HamzaNawaz17/MovieSentimentAnalyzer",
+            filename="final_lstm_model.keras"
+        )
+        model = tf.keras.models.load_model(model_path)
         
         # Get max_len (default to 200 if metadata not available)
         max_len = 200
         try:
-            with open('metadata.pickle', 'rb') as handle:
+            metadata_path = hf_hub_download(
+                repo_id="HamzaNawaz17/MovieSentimentAnalyzer",
+                filename="metadata.pickle"
+            )
+            with open(metadata_path, 'rb') as handle:
                 metadata = pickle.load(handle)
                 max_len = metadata.get('max_len', 200)
         except:
@@ -102,7 +116,7 @@ def load_resources():
         return tokenizer, model, max_len
         
     except Exception as e:
-        st.error(f"Error loading model files: {str(e)}")
+        st.error(f"Error loading model files from Hugging Face: {str(e)}")
         st.stop()
 
 # Load resources
@@ -173,6 +187,7 @@ def main():
         - Training Data: IMDB Movie Reviews (50,000 samples)
         - Accuracy: ~86.7% on test data
         - Max Sequence Length: 200 tokens
+        - Hosted on: [Hugging Face Hub](https://huggingface.co/HamzaNawaz17/MovieSentimentAnalyzer)
         
         **Text Processing:**
         - HTML tags removed
