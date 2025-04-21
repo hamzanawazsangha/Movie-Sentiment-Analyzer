@@ -9,13 +9,10 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from huggingface_hub import hf_hub_download
 import os
+import time
 
-# Set TensorFlow logging to only show errors
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
-# Download NLTK data
-nltk.download('stopwords')
-nltk.download('wordnet')
+# Configure environment
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow info messages
 
 # Set page config
 st.set_page_config(
@@ -85,6 +82,17 @@ def clean_text(text):
     words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
     return ' '.join(words)
 
+# Safe NLTK data download
+def download_nltk_data():
+    try:
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        nltk.download('stopwords')
+    try:
+        nltk.data.find('corpora/wordnet')
+    except LookupError:
+        nltk.download('wordnet')
+
 # Load resources from Hugging Face Hub
 @st.cache_resource
 def load_resources():
@@ -138,6 +146,10 @@ def main():
     
     with col2:
         st.image("https://cdn.pixabay.com/photo/2015/11/22/19/04/camera-1056511_640.jpg", width=200)
+    
+    # Initialize NLTK data
+    with st.spinner("Loading NLP resources..."):
+        download_nltk_data()
     
     # Text input
     review_text = st.text_area("Enter your movie review here:", height=150, key="review_input")
